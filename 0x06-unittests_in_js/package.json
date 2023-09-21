@@ -2,9 +2,9 @@
   "name": "testcomp",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "0-calcul.js",
   "scripts": {
-    "test": "mocha"
+    "test": "./node_modules/mocha/bin/mocha"
   },
   "keywords": [],
   "author": "",
