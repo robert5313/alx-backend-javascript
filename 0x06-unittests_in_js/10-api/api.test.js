@@ -1,41 +1,27 @@
 'use strict';
-const request = require('request');
-const chai = require('chai');
+const request = require('supertest');
+const app = require('./api');
 
-describe('GET /', () => {
-  it('endpoint: GET /', (done) => {
-    const call = {
-      url: 'http://localhost:7865',
-      method: 'GET',
-    };
-    request(call, (error, response, body) => {
-      chai.expect(response.statusCode).to.equal(200);
-      chai.expect(body).to.equal('Welcome to the payment system');
-      done();
+describe('GET /available_payments', () => {
+  it('should return the available payment methods', async () => {
+    const response = await request(app).get('/available_payments');
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toEqual({
+      payment_methods: {
+        credit_cards: true,
+        paypal: false
+      }
     });
   });
 });
 
-describe('GET /cart/:id', () => {
-  it('endpoint: GET /cart/:id', (done) => {
-    const call = {
-      url: 'http://localhost:7865/cart/12',
-      method: 'GET',
-    };
-    request(call, (error, response, body) => {
-      chai.expect(response.statusCode).to.equal(200);
-      chai.expect(body).to.equal('Payment methods for cart 12');
-      done();
-    });
+describe('POST /login', () => {
+  it('should return a welcome message with the username', async () => {
+    const response = await request(app)
+      .post('/login')
+      .send({ userName: 'Betty' })
+      .set('Content-Type', 'application/json');
+    expect(response.statusCode).toBe(200);
+    expect(response.text).toBe('Welcome Betty');
   });
 });
-
-describe('GET /cart/:isNaN', () => {
-  it('endpoint: GET /cart/:isNaN', (done) => {
-    const call = {
-      url: 'http://localhost:7865/cart/anything',
-      method: 'GET',
-    };
-    request(call, (error, response, body) => {
-      chai.expect(response.statusCode).to.equal(404);
-
